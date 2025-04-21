@@ -61,12 +61,9 @@ class ParentNode(HTMLNode):
             children_html += child.to_html()
         return f"<{self.tag}{props_html}>{children_html}</{self.tag}>"
 
-node = ParentNode("p", [
-            LeafNode("b", "Bold text"),
-            LeafNode(None, "Normal text"),
-            LeafNode("i", "italic text"),
-            LeafNode(None, "Normal text"),
-        ],)
-print(
-    f"TESTING: {node.to_html()}"
-)
+# node = ParentNode("p", [
+#             LeafNode("b", "Bold text"),
+#             LeafNode(None, "Normal text"),
+#             LeafNode("i", "italic text"),
+#             LeafNode(None, "Normal text"),
+#         ],)
