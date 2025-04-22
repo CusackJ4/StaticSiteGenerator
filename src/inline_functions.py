@@ -155,9 +155,9 @@ def text_to_textnodes(text):
     text_nodes = split_nodes_delimiter(text_nodes, "_", TextType.ITALIC)
     return text_nodes
 
-text_for_node = "This is **text** with an _italic_ word \
-            and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and \
-                a [link](https://boot.dev)"
+# text_for_node = "This is **text** with an _italic_ word \
+#             and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and \
+#                 a [link](https://boot.dev)"
 
 # result = text_to_textnodes(text_for_node)
 # print(result)

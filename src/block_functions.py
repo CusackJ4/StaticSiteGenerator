@@ -73,47 +73,24 @@ def text_to_children(markdown):
 
 
 
-test_md = """
-- Item 1
-- Item 2
-- Item 3
-"""
-
-
-test_md = '''1. This is a random first-line!
-        2. It's also got some funky-fresh(!!!) code blocks in it.
-        3. Look it says moranium!
-        4. And I think that's pretty friggin' cool!
-
-        5. Blah blach blah
-        6. Random text here!
-        '''
-
-
-lines = test_md.split("\n")
-child_nodes = []
-for line in lines:
-    if not line.strip():
-        continue
-    stripped = line.strip()
-    line_text = re.sub(r'^\d+\.\s+', '', stripped)
-    child_nodes.append(text_to_children(line_text)[0])
-
-print(child_nodes)
-
-
 def markdown_to_html_node(markdown):
     block_list = markdown_to_blocks(markdown)
     
     parent_node = ParentNode("div", [])
-    for block in block_list:
+    # for block in block_list:
+    for i, block in enumerate(block_list):
+        # print(f"Processing block {i}: {block[:30]}...")  # Print first 30 chars
+    # Then your existing code
         block_type = block_to_block_type(block)
         
         match block_type:
             case BlockType.PARAGRAPH:
+                # print("Processing paragraph")
                 block_node = ParentNode(tag = "p", children = [], props={})
                 block = block.replace("\n", " ")
+                # print(f"About to process text: {block[:50]}...")
                 child_nodes = text_to_children(block)
+                # print(f"Got {len(child_nodes)} child nodes")
                 block_node.children = child_nodes
                 parent_node.children.append(block_node)
             case BlockType.HEADING:
@@ -135,14 +112,19 @@ def markdown_to_html_node(markdown):
                 block_node.children = [child_node]
                 parent_node.children.append(block_node)
             case BlockType.QUOTE:
-                # NOTE: Not sure if I should be matching the entire quote or line-by-line. 
-                # Current regex will divide blockquote into a subnode for each line. 
-                # See inline_functions.py line 80 for regex that matches entire quote. 
                 block_node = ParentNode(tag = "blockquote", children = [], props={})
-                block = block.replace(">", "")
-                child_nodes = text_to_children(block)
+                
+                
+                # block = block.replace(">", "")
+                block = block.replace(">", "").strip()
+                lines = block.split("\n")
+                processed_text = " ".join([line.strip() for line in lines if line.strip()])
+                child_nodes = text_to_children(processed_text)
+
+                # child_nodes = text_to_children(block)
                 block_node.children = child_nodes
                 parent_node.children.append(block_node)
+                
             case BlockType.UNORDERED_LIST:
                 block_node = ParentNode(tag = "ul", children = [], props={})
                 
@@ -152,12 +134,13 @@ def markdown_to_html_node(markdown):
                     stripped = line.strip()
                     if stripped.startswith(("- ", "* ", "+ ")):
                         line_text = line[2:]
-                        child_nodes.append(text_to_children(line_text)[0])
-                
-                block_node.children = child_nodes
-                for node in block_node.children:
-                    node.tag = "li"
+                        # Create a list item node
+                        li_node = ParentNode(tag="li", children=text_to_children(line_text), props={})
+                        # Add the list item to the unordered list
+                        block_node.children.append(li_node)
+
                 parent_node.children.append(block_node)
+                
             case BlockType.ORDERED_LIST:
                 block_node = ParentNode(tag = "ol", children = [], props={})
                 
@@ -168,21 +151,14 @@ def markdown_to_html_node(markdown):
                         continue
                     stripped = line.strip()
                     line_text = re.sub(r'^\d+\.\s+', '', stripped)
-                    child_nodes.append(text_to_children(line_text)[0])
-                
-                # child_nodes = text_to_children(block)
-                block_node.children = child_nodes
-                
-                for node in block_node.children:
-                    # if node.value.startswith("\n"):
-                    #     node.value = node.value[1:]
-                    # node.value = re.sub("^\d+\. ", "", node.value, flags=re.MULTILINE)
-                    node.tag = "li"
+                    # Create a list item node
+                    li_node = ParentNode(tag="li", children=text_to_children(line_text), props={})
+                    # Add the list item directly to the ordered list
+                    block_node.children.append(li_node)
+    
                 parent_node.children.append(block_node)
 
     return parent_node
 
-
-print(markdown_to_html_node(test_md).to_html())
 
 

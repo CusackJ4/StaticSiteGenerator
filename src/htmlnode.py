@@ -34,7 +34,7 @@ class LeafNode(HTMLNode):
         super().__setattr__(name, value)
 
     def to_html(self):
-        if not self.value:
+        if not self.value and self.tag != "img":
             raise ValueError("LeafNode must have a value")
         if not self.tag:
             return str(self.value)
