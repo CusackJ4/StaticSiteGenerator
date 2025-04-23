@@ -16,7 +16,8 @@ def main():
     # print(text_node) # uses __repr__
     # print(html_node)  # uses __repr__
     
-    # Deletes the public directory and copies files from static to public
+    ## Deletes the docs directory and copies files from static to docs
+    ## parameters are currently hard-coded into func def
     static_site_copier()
 
     # DEPRECATED for the "Generates all" code below --- Generates a page from content/index.md using template.html and writes to public/index.html --- 
