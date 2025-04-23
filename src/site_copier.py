@@ -96,7 +96,7 @@ def generate_page(from_path, template_path, dest_path, base_path):
     ### modified but not tested:
     template_contents = template_path_contents.replace("{{ Title }}", title)\
         .replace("{{ Content }}", html_string).replace('''href="/''', f'href="{base_path}')\
-            .replace('''src="/''', f'href="{base_path}')
+            .replace('''src="/''', f'src="{base_path}')
     with open(dest_path, "w") as f:
         f.write(template_contents)
     return template_contents
