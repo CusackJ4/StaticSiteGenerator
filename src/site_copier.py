@@ -17,7 +17,7 @@ def copy_static_folder(current_path, target_path):
 
         # Checks to see if path is to a file
         if os.path.isfile(joined_path):
-            print("file created")
+            # print("file created")
 
             # copies file to target path
             shutil.copy(joined_path, 
@@ -31,7 +31,7 @@ def copy_static_folder(current_path, target_path):
 
         # checks to see if path is to a directory
         if os.path.isdir(joined_path):
-            print("dir created")
+            # print("dir created")
 
             # create path for new directory in /public
             dst_path = os.path.join(dst_path, dir_item)
@@ -47,15 +47,15 @@ def copy_static_folder(current_path, target_path):
 
 def static_site_copier():
     static_path = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/static/"
-    public_path = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/public/"
+    public_path = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/docs/"
 
     # Delete public directory
     with suppress(FileNotFoundError):
-        print("public folder deleted!")
+        # print("public folder deleted!")
         shutil.rmtree(public_path)
     # Make public directory
     os.makedirs(public_path)
-    print("public folder created!")
+    # print("public folder created!")
 
     # Use function
     copy_static_folder(static_path, public_path)
@@ -84,17 +84,19 @@ result = extract_title("#", file_md)
 # print(result)
 
 
-def generate_page(from_path, template_path, dest_path):
-    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+def generate_page(from_path, template_path, dest_path, base_path):
+    # print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     with open(from_path) as f:
         markdown_from_path = f.read()
     with open(template_path) as f:
         template_path_contents = f.read()    
     html_string = markdown_to_html_node(markdown_from_path).to_html()
     title = extract_title("#", markdown_from_path)
-    print(title)
+    # print(title)
+    ### modified but not tested:
     template_contents = template_path_contents.replace("{{ Title }}", title)\
-        .replace("{{ Content }}", html_string)
+        .replace("{{ Content }}", html_string).replace('''href="/''', f'href="{base_path}')\
+            .replace('''src="/''', f'href="{base_path}')
     with open(dest_path, "w") as f:
         f.write(template_contents)
     return template_contents
@@ -112,7 +114,7 @@ template_p = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/template.
 dest_path = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/public/"
 
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, base_path):
     content_path = dir_path_content
     template_path = template_path
     dir_path = dest_dir_path
@@ -121,12 +123,12 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
     for dir_item in dir_list: # loop through items
         current_path = os.path.join(content_path, dir_item) # create path to retrieve each item from /content
         file_name, file_extension = os.path.splitext(dir_item) # get file extension 
-        print(f"test: {file_name} and {file_extension}")
+        # print(f"test: {file_name} and {file_extension}")
 
         if file_extension == ".md": # perform operation if file is markdown
             destination_path = dest_dir_path + file_name + ".html" # create path for new item in public folder
-            print(f"File Desintation: {destination_path}")
-            generate_page(current_path, template_path, destination_path) # use template to convert html to markdown and write to public folder
+            # print(f"File Desintation: {destination_path}")
+            generate_page(current_path, template_path, destination_path, base_path) # use template to convert html to markdown and write to public folder
 
     for dir_item in dir_list: # loop through items
         current_path = os.path.join(content_path, dir_item) # create path to each item
@@ -136,12 +138,12 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
 
             # create path for new directory in /public duplicating the source 'content' directory
             destination_path = os.path.join(dir_path, dir_item + "/")
-            print(f"Folder Desintation: {destination_path}")
+            # print(f"Folder Desintation: {destination_path}")
             os.makedirs(destination_path) 
             
 
             # recurse within subdirectory
-            generate_pages_recursive(current_path, template_path, destination_path)
+            generate_pages_recursive(current_path, template_path, destination_path, base_path)
 
     return
 

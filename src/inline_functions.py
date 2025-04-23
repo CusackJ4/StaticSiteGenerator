@@ -29,7 +29,7 @@ def extract_markdown_images(text):
     for item in matches:
         alt_text.append(re.findall(r"(?<=!\[).*(?=\])", item)[0])
         urls.append(re.findall(r"(?<=\().*?(?=\))", item)[0])
-        print("EXTRACT_MD_IMGS_DB")
+        # print("EXTRACT_MD_IMGS_DB")
     return list(zip(alt_text, urls))        
 
 link_sample = "This is text with a link ![to boot dev](https://www.boot.dev) and ![to youtube](https://www.youtube.com/@bootdotdev)"
