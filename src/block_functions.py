@@ -82,6 +82,8 @@ def markdown_to_html_node(markdown):
         # print(f"Processing block {i}: {block[:30]}...")  # Print first 30 chars
     # Then your existing code
         block_type = block_to_block_type(block)
+        # print(f"The Block Type is {block_type}")
+        # print(f"About to process text: {block[:50]}...")
         
         match block_type:
             case BlockType.PARAGRAPH:
@@ -91,6 +93,7 @@ def markdown_to_html_node(markdown):
                 # print(f"About to process text: {block[:50]}...")
                 child_nodes = text_to_children(block)
                 # print(f"Got {len(child_nodes)} child nodes")
+                # print(list(child_nodes))
                 block_node.children = child_nodes
                 parent_node.children.append(block_node)
             case BlockType.HEADING:

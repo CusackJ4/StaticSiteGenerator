@@ -153,7 +153,11 @@ def text_to_textnodes(text):
     text_nodes = split_nodes_delimiter(text_nodes, "`", TextType.CODE)
     text_nodes = split_nodes_delimiter(text_nodes, "*", TextType.ITALIC)
     text_nodes = split_nodes_delimiter(text_nodes, "_", TextType.ITALIC)
-    return text_nodes
+
+    # trialling to prevent parsing errors if node text is empty
+    filtered_nodes = [node for node in text_nodes if not (node.text == "" and node.text_type == TextType.TEXT)]
+
+    return filtered_nodes
 
 # text_for_node = "This is **text** with an _italic_ word \
 #             and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and \

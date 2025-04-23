@@ -99,11 +99,52 @@ def generate_page(from_path, template_path, dest_path):
         f.write(template_contents)
     return template_contents
 
-dest_path = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/public/index.html"
-markdown_path = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/content/index.md"
-template_path = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/template.html"
+# dest_path = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/public/index.html"
+# markdown_path = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/content/index.md"
+# template_path = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/template.html"
 
-generate_page(markdown_path, template_path, dest_path)
+# generate_page(markdown_path, template_path, dest_path)
+
+
+### Generate pages recursive func
+content_p = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/content/"
+template_p = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/template.html"
+dest_path = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/public/"
+
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    content_path = dir_path_content
+    template_path = template_path
+    dir_path = dest_dir_path
+    dir_list = os.listdir(path=content_path) # list all items in current directory
+
+    for dir_item in dir_list: # loop through items
+        current_path = os.path.join(content_path, dir_item) # create path to retrieve each item from /content
+        file_name, file_extension = os.path.splitext(dir_item) # get file extension 
+        print(f"test: {file_name} and {file_extension}")
+
+        if file_extension == ".md": # perform operation if file is markdown
+            destination_path = dest_dir_path + file_name + ".html" # create path for new item in public folder
+            print(f"File Desintation: {destination_path}")
+            generate_page(current_path, template_path, destination_path) # use template to convert html to markdown and write to public folder
+
+    for dir_item in dir_list: # loop through items
+        current_path = os.path.join(content_path, dir_item) # create path to each item
+
+        if os.path.isdir(current_path):
+            # print("dir created")
+
+            # create path for new directory in /public duplicating the source 'content' directory
+            destination_path = os.path.join(dir_path, dir_item + "/")
+            print(f"Folder Desintation: {destination_path}")
+            os.makedirs(destination_path) 
+            
+
+            # recurse within subdirectory
+            generate_pages_recursive(current_path, template_path, destination_path)
+
+    return
+
 
 
 

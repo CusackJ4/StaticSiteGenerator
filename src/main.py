@@ -1,6 +1,6 @@
 from textnode import TextNode
 from htmlnode import HTMLNode
-from site_copier import static_site_copier, generate_page
+from site_copier import static_site_copier, generate_page, generate_pages_recursive
 
 def main():
     text_node = TextNode("placeholder text", "link", "https://www.website.com") # placeholder values
@@ -13,10 +13,17 @@ def main():
     static_site_copier()
 
     # Generates a page from content/index.md using template.html and writes to public/index.html
-    dest_path = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/public/index.html"
-    markdown_path = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/content/index.md"
-    template_path = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/template.html"
-    generate_page(markdown_path, template_path, dest_path)
+    # dest_path = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/public/index.html"
+    # markdown_path = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/content/index.md"
+    # template_path = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/template.html"
+    # generate_page(markdown_path, template_path, dest_path)
+
+    # Generates all files in content/ 
+    content_p = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/content/"
+    template_p = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/template.html"
+    dest_path = "/Users/jeffshomefolder/codeworkspace/StaticSiteGenerator/public/"
+    generate_pages_recursive(content_p, template_p, dest_path)
+    
 
 
 
